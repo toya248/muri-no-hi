@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>無理な日の手順書</title>
+<meta name="description" content="精神的に無理な日に、上から順に読むための手順書。慰めではなく、過去の自分が確かめたことと、やる順番だけを置く。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#eef0ee; --ink:#24292b; --ink-soft:#5b6367; --rule:#c6cbc9;
+  --accent:#3f5a78; --accent-ink:#fff; --well:#e2e6e4;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --paper:#1b1e1f; --ink:#d8d7d1; --ink-soft:#9aa1a3; --rule:#3a4043;
+    --accent:#8fb0d1; --accent-ink:#141617; --well:#242829;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --paper:#1b1e1f; --ink:#d8d7d1; --ink-soft:#9aa1a3; --rule:#3a4043;
+  --accent:#8fb0d1; --accent-ink:#141617; --well:#242829;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:"Noto Serif JP","Hiragino Mincho ProN","Yu Mincho",YuMincho,serif;
+  font-size:1.0625rem; line-height:2; letter-spacing:.02em; -webkit-font-smoothing:antialiased;
+}
+main{max-width:34em; margin:0 auto; padding:3.5rem 1.4rem 5rem}
+h1{font-size:1.75rem; font-weight:600; line-height:1.5; margin:0 0 .6rem; letter-spacing:.04em}
+.lead{margin:0 0 3rem; color:var(--ink-soft)}
+h2{font-size:1.05rem; font-weight:600; margin:3.2rem 0 1rem; padding-top:1.2rem; border-top:1px solid var(--rule); letter-spacing:.04em}
+h2 .n{display:inline-block; min-width:2.2em; color:var(--ink-soft); font-weight:400}
+p{margin:0 0 1em}
+ul,ol{margin:0 0 1em; padding-left:1.4em}
+li{margin:0 0 .4em}
+.note{color:var(--ink-soft); font-size:.95rem}
+.well{background:var(--well); padding:1rem 1.2rem; margin:0 0 1.2rem; border-left:3px solid var(--accent)}
+.well p:last-child,.well ul:last-child{margin-bottom:0}
+
+.triage{display:grid; grid-template-columns:1fr 1fr; gap:.8rem; margin:0 0 1.2rem}
+.triage button{
+  font:inherit; font-size:1.15rem; font-weight:600; letter-spacing:.06em; line-height:1.4;
+  padding:1.3rem .8rem; background:transparent; color:var(--ink); border:1.5px solid var(--ink);
+  cursor:pointer; text-align:center;
+}
+.triage button small{display:block; font-weight:400; font-size:.8rem; letter-spacing:.02em; color:var(--ink-soft); margin-top:.5rem}
+.triage button[aria-pressed="true"]{background:var(--ink); color:var(--paper)}
+.triage button[aria-pressed="true"] small{color:var(--paper); opacity:.8}
+button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--accent); outline-offset:3px}
+.path{display:none}
+.path[data-show="true"]{display:block}
+
+.check{list-style:none; padding:0; margin:0 0 1em}
+.check li{margin:0; border-bottom:1px solid var(--rule)}
+.check label{display:flex; gap:.9rem; align-items:flex-start; padding:.75rem 0; cursor:pointer}
+.check input{width:1.15rem; height:1.15rem; margin:.45rem 0 0; accent-color:var(--accent); flex:none}
+.check input:checked + span{color:var(--ink-soft); text-decoration:line-through; text-decoration-thickness:1px}
+.check span small{display:block; color:var(--ink-soft); font-size:.9rem; line-height:1.7; text-decoration:none}
+
+/* editable lists */
+.ed{list-style:none; padding:0; margin:0 0 1em}
+.ed li{display:grid; grid-template-columns:5.2em 1fr auto; gap:.8rem; padding:.7rem 0; border-bottom:1px solid var(--rule); align-items:baseline}
+.ed li.nodate{grid-template-columns:1fr auto}
+.ed time{color:var(--ink-soft); font-size:.9rem; white-space:nowrap}
+.ed .x{font:inherit; font-size:.85rem; background:none; border:none; color:var(--ink-soft); cursor:pointer; padding:0 .2em}
+.ed .x:hover{color:var(--ink)}
+.add{display:grid; gap:.6rem; margin:0 0 1.5rem}
+.add .row{display:flex; gap:.6rem; flex-wrap:wrap}
+input[type="text"],select,textarea,.btn{
+  font:inherit; color:var(--ink); background:var(--paper); border:1px solid var(--rule); padding:.5rem .7rem;
+}
+input[type="text"]{flex:1; min-width:10em}
+input.dt{flex:0 0 7.5em; min-width:0}
+textarea{width:100%; min-height:4.5em; line-height:1.8; resize:vertical}
+.btn{background:var(--accent); color:var(--accent-ink); border-color:var(--accent); padding:.5rem 1.2rem; cursor:pointer}
+.ghost{background:none; border:none; color:var(--ink-soft); font:inherit; font-size:.9rem; cursor:pointer; padding:0; text-decoration:underline; text-underline-offset:.2em}
+.empty{color:var(--ink-soft); font-size:.95rem}
+@media (max-width:420px){ .ed li{grid-template-columns:1fr auto} .ed time{grid-column:1 / -1} }
+
+.entries{list-style:none; padding:0; margin:0}
+.entries li{padding:.6rem 0; border-bottom:1px solid var(--rule); font-size:.95rem; line-height:1.8}
+.entries time{color:var(--ink-soft); margin-right:.8em}
+.entries .lv{display:inline-block; min-width:1.6em; color:var(--accent); font-weight:600}
+footer{margin-top:4rem; padding-top:1.2rem; border-top:1px solid var(--rule); color:var(--ink-soft); font-size:.9rem; line-height:1.9}
+@media (prefers-reduced-motion:no-preference){ .path{animation:in .25s ease-out} @keyframes in{from{opacity:0}to{opacity:1}} }
+</style>
+</head>
+<body>
+<main>
+
+<h1>無理な日の手順書</h1>
+<p class="lead">慰めは書いていない。過去の自分が確かめたことと、やる順番だけがある。上から読む。全部は読まなくていい。</p>
+<p class="note">手順3・5・6は自分の言葉で書き足す欄になっている。調子のいい日に埋めておく。書いた内容はこの端末のブラウザにだけ残り、どこにも送られない。</p>
+
+<h2><span class="n">1</span>いま、どっちか</h2>
+<p>無理には二種類あって、対処が逆になる。先に見分ける。</p>
+<div class="triage" role="group" aria-label="いまの状態">
+  <button type="button" data-path="stuck" aria-pressed="false">動けない<small>起きられない・風呂に入れない・何も始まらない</small></button>
+  <button type="button" data-path="spin" aria-pressed="false">止まれない<small>頭がぐるぐる・連絡したい・今すぐ決めたい</small></button>
+</div>
+
+<div class="path" id="stuck">
+  <div class="well">
+    <p>今日の採点基準は「やったか、やらないか」だけ。質は見ない。雑にやった日は、やった日に数える。</p>
+    <p>やるのは1つ。候補はこれ以上出さない。</p>
+    <ul>
+      <li>いちばん小さい単位でやる。写真なら1枚、文章なら3行、片づけなら1か所</li>
+      <li>直さない、整えない、見せない</li>
+      <li>なにもしない。それも1つに数える</li>
+    </ul>
+    <p>「いつやるか」だけ先に決める。判断を減らすのが目的で、頑張るのが目的ではない。</p>
+  </div>
+  <p>動けないのは、たいてい能力の問題ではない。「どこまでやれば終わりか」が決まっていないか、人目にさらす抵抗が大きいか。だから今日は「1か所だけ開く」以上のことを求めない。</p>
+</div>
+
+<div class="path" id="spin">
+  <div class="well">
+    <p>今日は決めない日。すでに決めたことは手順5に書いてある。新しい決定は、明日の自分の仕事。</p>
+    <ul>
+      <li>連絡は送らない。書きたければ下書きに書いて閉じる</li>
+      <li>辞める・やめる・断つ、の類は今日は言わない</li>
+      <li>順位づけ、比較、見直しは今日はしない</li>
+    </ul>
+    <p>頭が入力を探してそわそわするのは最初の10分。そこで何かを読んだり送ったりすると続く。10分だけ待つと勝手に静かになる。</p>
+  </div>
+  <p>衝動の日に出す結論は、翌日見ると粗い。止まることと、あきらめることは別。</p>
+</div>
+
+<h2><span class="n">2</span>身体の確認</h2>
+<p>気持ちではなく事実を見る。できたものに印をつける。日付が変わると印は消える。</p>
+<ul class="check" id="checklist">
+  <li><label><input type="checkbox" data-key="med"><span>今日の薬を飲んだ<small>飲むものがあるなら。飲んだ分だけでいい</small></span></label></li>
+  <li><label><input type="checkbox" data-key="eat"><span>何か食べた<small>中身は問わない</small></span></label></li>
+  <li><label><input type="checkbox" data-key="water"><span>水を飲んだ</span></label></li>
+  <li><label><input type="checkbox" data-key="bath"><span>風呂に入った<small>シャワーだけ・髪は洗わない・拭くだけ、のどれかで「入った」に数える</small></span></label></li>
+  <li><label><input type="checkbox" data-key="sleep"><span>昨夜、途中で起きなかったか確認した<small>翌朝の調子は睡眠時間より連続性で決まる。悪かったなら今日の不調は昨夜の結果で、今日の能力ではない</small></span></label></li>
+</ul>
+<p class="note">評価され続けている期間は、自分の世話が「評価の邪魔」に感じられる。風呂に入れないのは怠けではなく、その副作用。</p>
+
+<h2><span class="n">3</span>過去の自分が確認済みのこと</h2>
+<p>今の感覚より、記録のほうが信頼できる。うまくいった対処、終わった不調、続いたこと。日付をつけて残す。</p>
+<ul class="ed" id="ev"></ul>
+<p class="empty" id="ev-empty">まだない。調子のいい日に、ひとつ書く。</p>
+<form class="add" data-list="ev">
+  <div class="row">
+    <input type="text" class="dt" placeholder="2026/4" aria-label="いつ">
+    <input type="text" placeholder="何を確かめたか" aria-label="内容" required>
+    <button class="btn" type="submit">残す</button>
+  </div>
+</form>
+
+<h2><span class="n">4</span>動くなら、これだけ</h2>
+<ol>
+  <li>やるのは1つ。いちばん小さい単位で。</li>
+  <li>「いつ」だけ決める。</li>
+  <li>終わったら「やった日」に数える。質は採点しない。</li>
+</ol>
+<p class="note">2つ目をやりたくなったら、それは回復のサインなので、やってもいいし、明日に残してもいい。</p>
+
+<h2><span class="n">5</span>決め直さなくていいこと</h2>
+<p>すでに決めてある。今日の自分が蒸し返す必要はない。</p>
+<ul class="ed" id="dec"></ul>
+<p class="empty" id="dec-empty">まだない。決めたことがあれば、決めた日の自分の言葉で書く。</p>
+<form class="add" data-list="dec">
+  <div class="row">
+    <input type="text" placeholder="決めたこと" aria-label="内容" required>
+    <button class="btn" type="submit">残す</button>
+  </div>
+</form>
+
+<h2><span class="n">6</span>それでも無理なら</h2>
+<ul class="ed" id="help"></ul>
+<p class="empty" id="help-empty">連絡先を書いておく。主治医、家族、一言だけ送れる相手。</p>
+<form class="add" data-list="help">
+  <div class="row">
+    <input type="text" placeholder="誰に、どう連絡するか" aria-label="内容" required>
+    <button class="btn" type="submit">残す</button>
+  </div>
+</form>
+<p class="note">夜中で誰にも言えないなら、よりそいホットライン 0120-279-338（24時間）。</p>
+
+<h2><span class="n">7</span>記録</h2>
+<p>次に無理な日にこのページを読む自分のために、1行だけ残す。</p>
+<form id="logform" class="add">
+  <div class="row">
+    <label for="lv">無理の度合い</label>
+    <select id="lv">
+      <option value="1">1 — 気分だけ</option>
+      <option value="2">2 — 動きが鈍い</option>
+      <option value="3" selected>3 — 最低限だけ</option>
+      <option value="4">4 — 最低限も怪しい</option>
+      <option value="5">5 — 何もできない</option>
+    </select>
+  </div>
+  <textarea id="txt" placeholder="きっかけ、身体の状態、やったこと。1行でいい。"></textarea>
+  <div><button class="btn" type="submit">残す</button></div>
+</form>
+<ul class="entries" id="entries"></ul>
+<p class="empty" id="log-empty">まだ記録はない。</p>
+
+<footer>
+<p>書いたものはこの端末のブラウザ（localStorage）にだけ保存される。別の端末には引き継がれない。</p>
+<p><button class="ghost" id="export">書いたものをテキストで書き出す</button> ／ <button class="ghost" id="wipe">この端末の記録をすべて消す</button></p>
+</footer>
+
+</main>
+<script>
+(function(){
+  var today = new Date().toISOString().slice(0,10);
+  function get(k){try{return localStorage.getItem(k);}catch(e){return null;}}
+  function set(k,v){try{localStorage.setItem(k,v);}catch(e){}}
+  function load(k,fallback){try{var v=JSON.parse(get(k)||'null');return v==null?fallback:v;}catch(e){return fallback;}}
+  function esc(s){var d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+
+  // 1. triage
+  var buttons = document.querySelectorAll('.triage button');
+  var paths = document.querySelectorAll('.path');
+  buttons.forEach(function(b){
+    b.addEventListener('click', function(){
+      var id = b.getAttribute('data-path');
+      var open = b.getAttribute('aria-pressed') === 'true';
+      buttons.forEach(function(x){x.setAttribute('aria-pressed','false');});
+      paths.forEach(function(p){p.removeAttribute('data-show');});
+      if(!open){ b.setAttribute('aria-pressed','true'); document.getElementById(id).setAttribute('data-show','true'); }
+    });
+  });
+
+  // 2. checklist, resets daily
+  var ck = 'muri-check';
+  var saved = load(ck, null);
+  if(!saved || saved.date !== today){ saved = {date:today, done:{}}; }
+  document.querySelectorAll('#checklist input').forEach(function(i){
+    var k = i.getAttribute('data-key');
+    i.checked = !!saved.done[k];
+    i.addEventListener('change', function(){ saved.done[k] = i.checked; set(ck, JSON.stringify(saved)); });
+  });
+
+  // 3/5/6. editable lists
+  var lists = {ev:[], dec:[], help:[]};
+  Object.keys(lists).forEach(function(name){
+    lists[name] = load('muri-'+name, []);
+    if(!Array.isArray(lists[name])) lists[name] = [];
+  });
+  function renderList(name){
+    var ul = document.getElementById(name);
+    var empty = document.getElementById(name+'-empty');
+    ul.innerHTML = '';
+    lists[name].forEach(function(item, idx){
+      var li = document.createElement('li');
+      if(name === 'ev'){
+        li.innerHTML = '<time>'+esc(item.d||'')+'</time><span>'+esc(item.t)+'</span><button class="x" type="button" aria-label="削除">消す</button>';
+      }else{
+        li.className = 'nodate';
+        li.innerHTML = '<span>'+esc(item.t)+'</span><button class="x" type="button" aria-label="削除">消す</button>';
+      }
+      li.querySelector('.x').addEventListener('click', function(){
+        if(!confirm('この1行を消す？')) return;
+        lists[name].splice(idx,1); set('muri-'+name, JSON.stringify(lists[name])); renderList(name);
+      });
+      ul.appendChild(li);
+    });
+    empty.style.display = lists[name].length ? 'none' : '';
+  }
+  Object.keys(lists).forEach(renderList);
+  document.querySelectorAll('form.add[data-list]').forEach(function(f){
+    f.addEventListener('submit', function(ev){
+      ev.preventDefault();
+      var name = f.getAttribute('data-list');
+      var inputs = f.querySelectorAll('input[type="text"]');
+      var item = {};
+      if(name === 'ev'){ item.d = inputs[0].value.trim(); item.t = inputs[1].value.trim(); }
+      else { item.t = inputs[0].value.trim(); }
+      if(!item.t) return;
+      lists[name].push(item); set('muri-'+name, JSON.stringify(lists[name]));
+      inputs.forEach(function(i){i.value='';});
+      renderList(name);
+    });
+  });
+
+  // 7. log
+  var lk = 'muri-log';
+  var entries = load(lk, []); if(!Array.isArray(entries)) entries = [];
+  var list = document.getElementById('entries');
+  var logEmpty = document.getElementById('log-empty');
+  function renderLog(){
+    list.innerHTML = '';
+    entries.slice(-7).reverse().forEach(function(e){
+      var li = document.createElement('li');
+      li.innerHTML = '<time>'+esc(e.d)+'</time><span class="lv">'+esc(String(e.l))+'</span>'+esc(e.t||'');
+      list.appendChild(li);
+    });
+    logEmpty.style.display = entries.length ? 'none' : '';
+  }
+  renderLog();
+  document.getElementById('logform').addEventListener('submit', function(ev){
+    ev.preventDefault();
+    var t = document.getElementById('txt').value.trim();
+    entries.push({d: today, l: document.getElementById('lv').value, t: t});
+    if(entries.length > 100) entries = entries.slice(-100);
+    set(lk, JSON.stringify(entries));
+    document.getElementById('txt').value = '';
+    renderLog();
+  });
+
+  // export / wipe
+  document.getElementById('export').addEventListener('click', function(){
+    var out = ['# 無理な日の手順書（書き出し '+today+'）',''];
+    out.push('## 3 確認済みのこと'); lists.ev.forEach(function(i){out.push('- '+(i.d?i.d+' ':'')+i.t);}); out.push('');
+    out.push('## 5 決めたこと'); lists.dec.forEach(function(i){out.push('- '+i.t);}); out.push('');
+    out.push('## 6 連絡先'); lists.help.forEach(function(i){out.push('- '+i.t);}); out.push('');
+    out.push('## 7 記録'); entries.forEach(function(e){out.push('- '+e.d+' ['+e.l+'] '+(e.t||''));});
+    var w = window.open('', '_blank');
+    if(w){ w.document.write('<pre style="white-space:pre-wrap;font:15px/1.8 serif;padding:1em">'+esc(out.join('\n'))+'</pre>'); w.document.close(); }
+    else { alert(out.join('\n')); }
+  });
+  document.getElementById('wipe').addEventListener('click', function(){
+    if(!confirm('この端末に保存した記録をすべて消す。元に戻せない。')) return;
+    ['muri-check','muri-ev','muri-dec','muri-help','muri-log'].forEach(function(k){try{localStorage.removeItem(k);}catch(e){}});
+    location.reload();
+  });
+})();
+</script>
+</body>
+</html>
